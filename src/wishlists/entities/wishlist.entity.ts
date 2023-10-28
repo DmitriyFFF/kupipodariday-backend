@@ -7,7 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Length, IsUrl } from 'class-validator';
+//import { Length, IsUrl } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 import { Wish } from 'src/wishes/entities/wish.entity';
 
@@ -23,15 +23,15 @@ export class Wishlist {
   updatedAt: Date;
 
   @Column()
-  @Length(1, 250)
+  //@Length(1, 250)
   name: string;
 
   @Column()
-  @Length(0, 1500)
+  //@Length(0, 1500)
   description: string;
 
   @Column()
-  @IsUrl()
+  //@IsUrl()
   image: string;
 
   @ManyToOne(() => User, (user) => user.wishlists)

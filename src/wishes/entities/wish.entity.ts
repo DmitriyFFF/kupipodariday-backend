@@ -7,7 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Length, IsUrl, IsNumber, IsInt } from 'class-validator';
+//import { Length, IsUrl, IsNumber, IsInt } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 import { Offer } from 'src/offers/entities/offer.entity';
 
@@ -23,31 +23,31 @@ export class Wish {
   updatedAt: Date;
 
   @Column()
-  @Length(1, 250)
+  //@Length(1, 250)
   name: string;
 
   @Column()
-  @IsUrl()
+  //@IsUrl()
   link: string;
 
   @Column()
-  @IsUrl()
+  //@IsUrl()
   image: string;
 
   @Column()
-  @IsNumber({ maxDecimalPlaces: 2 })
+  //@IsNumber({ maxDecimalPlaces: 2 })
   price: number;
 
   @Column()
-  @IsNumber({ maxDecimalPlaces: 2 })
+  //@IsNumber({ maxDecimalPlaces: 2 })
   raised: number;
 
   @Column()
-  @IsInt()
+  //@IsInt()
   copied: number;
 
   @Column()
-  @Length(1, 1024)
+  //@Length(1, 1024)
   description: string;
 
   @ManyToOne(() => User, (user) => user.wishes)

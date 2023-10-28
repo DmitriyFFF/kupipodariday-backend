@@ -1,1 +1,17 @@
-export class CreateWishlistDto {}
+import { IsArray, IsNotEmpty, IsUrl, Length } from 'class-validator';
+
+export class CreateWishlistDto {
+  @IsNotEmpty()
+  @Length(1, 250)
+  name: string;
+
+  @Length(0, 1500)
+  description: string;
+
+  @IsUrl()
+  image: string;
+
+  @IsNotEmpty()
+  @IsArray()
+  items: number[];
+}
