@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsUrl, Length } from 'class-validator';
+import { IsNotEmpty, IsUrl, Length } from 'class-validator';
 
 export class CreateWishlistDto {
   @IsNotEmpty()
@@ -11,7 +11,7 @@ export class CreateWishlistDto {
   @IsUrl()
   image: string;
 
-  @IsNotEmpty()
-  @IsArray()
-  items: number[];
+  // @IsNotEmpty()
+  // @IsArray()
+  // items: number[];
 }
