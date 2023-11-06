@@ -32,7 +32,7 @@ export class WishesService {
     // return wish;
   }
 
-  async update(id: number, updateWishDto: UpdateWishDto): Promise<Wish> {
+  async updateOne(id: number, updateWishDto: UpdateWishDto): Promise<Wish> {
     await this.wishRepository.update({ id }, updateWishDto);
 
     return this.wishRepository.findOne({
@@ -42,7 +42,7 @@ export class WishesService {
     });
   }
 
-  async remove(id: number): Promise<void> {
+  async removeOne(id: number): Promise<void> {
     await this.wishRepository.delete(id);
 
     // return { message: 'Wish has been deleted' };

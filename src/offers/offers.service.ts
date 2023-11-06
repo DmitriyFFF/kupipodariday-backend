@@ -32,7 +32,7 @@ export class OffersService {
     // return offer;
   }
 
-  async update(id: number, updateOfferDto: UpdateOfferDto): Promise<Offer> {
+  async updateOne(id: number, updateOfferDto: UpdateOfferDto): Promise<Offer> {
     await this.offerRepository.update({ id }, updateOfferDto);
 
     return this.offerRepository.findOne({
@@ -42,7 +42,7 @@ export class OffersService {
     });
   }
 
-  async remove(id: number): Promise<void> {
+  async removeOne(id: number): Promise<void> {
     await this.offerRepository.delete(id);
   }
 }

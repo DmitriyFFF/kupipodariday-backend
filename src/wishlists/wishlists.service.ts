@@ -32,7 +32,7 @@ export class WishlistsService {
     // return wishlist;
   }
 
-  async update(
+  async updateOne(
     id: number,
     updateWishlistDto: UpdateWishlistDto,
   ): Promise<Wishlist> {
@@ -45,7 +45,7 @@ export class WishlistsService {
     });
   }
 
-  async remove(id: number): Promise<void> {
+  async removeOne(id: number): Promise<void> {
     await this.wishListRepository.delete(id);
 
     // return { message: 'WishList has been deleted' };

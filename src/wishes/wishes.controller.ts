@@ -1,34 +1,56 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  NotFoundException,
+} from '@nestjs/common';
 import { WishesService } from './wishes.service';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
+import { Wish } from './entities/wish.entity';
 
 @Controller('wishes')
 export class WishesController {
   constructor(private readonly wishesService: WishesService) {}
 
   @Post()
-  create(@Body() createWishDto: CreateWishDto) {
+  async create(@Body() createWishDto: CreateWishDto): Promise<Wish> {
     return this.wishesService.create(createWishDto);
   }
 
-  @Get()
-  findAll() {
-    return this.wishesService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.wishesService.findAll();
+  // }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.wishesService.findOne(+id);
+  async findOne(@Param('id') id: number): Promise<Wish> {
+    const wish = await this.wishesService.findOne(id);
+    if (!wish) {
+      throw new NotFoundException('Wish does not exist!');
+    } else {
+      return wish;
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWishDto: UpdateWishDto) {
-    return this.wishesService.update(+id, updateWishDto);
+  async update(
+    @Param('id') id: number,
+    @Body() updateWishDto: UpdateWishDto,
+  ): Promise<Wish> {
+    return this.wishesService.updateOne(id, updateWishDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.wishesService.remove(+id);
+  async remove(@Param('id') id: number): Promise<any> {
+    const wish = await this.wishesService.findOne(id);
+    if (!wish) {
+      throw new NotFoundException('Wish does not exist!');
+    }
+    return this.wishesService.removeOne(id);
   }
 }

@@ -42,7 +42,7 @@ export class UsersService {
     return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async updateOne(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     await this.userRepository.update({ id }, updateUserDto);
 
     return this.userRepository.findOne({
