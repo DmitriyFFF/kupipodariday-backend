@@ -15,7 +15,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { LocalGuard } from './guards/local.guard';
-import { JwtGuard } from './guards/jwt.guard';
+// import { JwtGuard } from './guards/jwt.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -30,7 +30,7 @@ export class AuthController {
     return this.authService.auth(req.user);
   }
 
-  @UseGuards(JwtGuard) //??
+  // @UseGuards(JwtGuard) //??
   @Post('signup')
   async signup(@Body() createUserDto: CreateUserDto) {
     const user = await this.userService.create(createUserDto);
