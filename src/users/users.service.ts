@@ -46,6 +46,20 @@ export class UsersService {
     return user;
   }
 
+  // async findMany(user: { query: any }): Promise<User[]> {
+  //   const users = this.userRepository.find({
+  //     where: [{ username: user.query }, { email: user.query }],
+  //   });
+  //   return users;
+  // }
+
+  async findMany(query: string): Promise<User[]> {
+    const users = await this.userRepository.find({
+      where: [{ username: query }, { email: query }],
+    });
+    return users;
+  }
+
   async updateOne(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const saltOrRounds = 10; //вынести в константы
     if (updateUserDto.password) {

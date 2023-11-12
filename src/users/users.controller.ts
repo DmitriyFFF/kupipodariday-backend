@@ -59,6 +59,11 @@ export class UsersController {
     }
   }
 
+  @Post('find')
+  async findMany(@Body() user): Promise<User[]> {
+    return this.usersService.findMany(user);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<User> {
     const user = await this.usersService.findOne(id);
