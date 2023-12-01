@@ -15,6 +15,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
+// import { Wish } from 'src/wishes/entities/wish.entity';
 
 @UseGuards(JwtGuard)
 @Controller('users')
@@ -58,6 +59,15 @@ export class UsersController {
       return user;
     }
   }
+
+  // @Get(':username/wishes')
+  // async getWishes(@Param('username') username: string): Promise<Wish[]> {
+  //   const user = await this.usersService.findByUsername(username);
+  //   if (!user) {
+  //     throw new NotFoundException('User does not exist!');
+  //   }
+  //   return this.usersService.getWishesById(user.id);
+  // }
 
   @Post('find')
   async findMany(@Body() user): Promise<User[]> {

@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Wish } from 'src/wishes/entities/wish.entity';
 
 @Injectable()
 export class UsersService {
@@ -79,4 +80,28 @@ export class UsersService {
 
     // return { message: 'User has been deleted' };
   }
+
+  async getWishesById(id: number): Promise<Wish[]> {
+    const { wishes } = await this.userRepository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        wishes: true,
+      },
+    });
+    return wishes;
+  }
+
+  // async getWishesByUsername(username: string): Promise<Wish[]> {
+  //   const { wishes } = await this.userRepository.findOne({
+  //     where: {
+  //       username,
+  //     },
+  //     relations: {
+  //       wishes: true,
+  //     },
+  //   });
+  //   return wishes;
+  // }
 }

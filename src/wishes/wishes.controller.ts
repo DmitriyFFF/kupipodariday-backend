@@ -5,6 +5,7 @@ import {
   Body,
   Patch,
   Param,
+  Req,
   Delete,
   NotFoundException,
 } from '@nestjs/common';
@@ -37,20 +38,33 @@ export class WishesController {
     }
   }
 
+  // @Patch(':id')
+  // async update(
+  //   @Param('id') id: number,
+  //   @Body() updateWishDto: UpdateWishDto,
+  // ): Promise<Wish> {
+  //   return this.wishesService.updateOne(id, updateWishDto);
+  // }
+
   @Patch(':id')
   async update(
+    @Req() req,
     @Param('id') id: number,
     @Body() updateWishDto: UpdateWishDto,
-  ): Promise<Wish> {
-    return this.wishesService.updateOne(id, updateWishDto);
-  }
-
-  @Delete(':id')
-  async remove(@Param('id') id: number): Promise<any> {
+  ) {
     const wish = await this.wishesService.findOne(id);
     if (!wish) {
       throw new NotFoundException('Wish does not exist!');
     }
-    return this.wishesService.removeOne(id);
+    return this.wishesService.updateOne(id, req.user.id, updateWishDto);
+  }
+
+  @Delete(':id')
+  async remove(@Req() req, @Param('id') id: number): Promise<any> {
+    const wish = await this.wishesService.findOne(id);
+    if (!wish) {
+      throw new NotFoundException('Wish does not exist!');
+    }
+    return this.wishesService.removeOne(id, req.user.id);
   }
 }
