@@ -8,26 +8,38 @@ import {
   Req,
   Delete,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { WishesService } from './wishes.service';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
 import { Wish } from './entities/wish.entity';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
 @Controller('wishes')
 export class WishesController {
   constructor(private readonly wishesService: WishesService) {}
 
-  @Post()
-  async create(@Body() createWishDto: CreateWishDto): Promise<Wish> {
-    return this.wishesService.create(createWishDto);
+  @Get('last')
+  async findLast() {
+    return await this.wishesService.findLast();
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.wishesService.findAll();
-  // }
+  @Get('top')
+  async findTop() {
+    return await this.wishesService.findTop();
+  }
 
+  @UseGuards(JwtGuard)
+  @Post()
+  async create(
+    @Req() req,
+    @Body() createWishDto: CreateWishDto,
+  ): Promise<Wish> {
+    return this.wishesService.create(req.user, createWishDto);
+  }
+
+  @UseGuards(JwtGuard)
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Wish> {
     const wish = await this.wishesService.findOne(id);
@@ -46,6 +58,7 @@ export class WishesController {
   //   return this.wishesService.updateOne(id, updateWishDto);
   // }
 
+  @UseGuards(JwtGuard)
   @Patch(':id')
   async update(
     @Req() req,
@@ -56,9 +69,10 @@ export class WishesController {
     if (!wish) {
       throw new NotFoundException('Wish does not exist!');
     }
-    return this.wishesService.updateOne(id, req.user.id, updateWishDto);
+    return this.wishesService.update(id, req.user.id, updateWishDto);
   }
 
+  @UseGuards(JwtGuard)
   @Delete(':id')
   async remove(@Req() req, @Param('id') id: number): Promise<any> {
     const wish = await this.wishesService.findOne(id);
@@ -66,5 +80,11 @@ export class WishesController {
       throw new NotFoundException('Wish does not exist!');
     }
     return this.wishesService.removeOne(id, req.user.id);
+  }
+
+  @UseGuards(JwtGuard)
+  @Post(':id/copy')
+  async copyWish(@Req() req, @Param('id') id: number) {
+    return await this.wishesService.copyWish(id, req.user);
   }
 }

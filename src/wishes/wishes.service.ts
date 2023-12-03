@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Wish } from './entities/wish.entity';
 import { Repository } from 'typeorm';
 import { ForbiddenException } from '@nestjs/common/exceptions';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class WishesService {
@@ -13,8 +14,8 @@ export class WishesService {
     private readonly wishRepository: Repository<Wish>,
   ) {}
 
-  async create(createWishDto: CreateWishDto): Promise<Wish> {
-    const wish = this.wishRepository.create(createWishDto);
+  async create(owner: User, createWishDto: CreateWishDto): Promise<Wish> {
+    const wish = this.wishRepository.create({ ...createWishDto, owner });
 
     return this.wishRepository.save(wish);
   }
@@ -23,13 +24,29 @@ export class WishesService {
   //   return this.wishRepository.find();
   // }
 
-  async findOne(id: number): Promise<Wish> {
-    // return this.wishRepository.findOne({
-    //   where: {
-    //     id,
-    //   },
-    // });
+  async findLast() {
+    const wishes = await this.wishRepository.find({
+      order: {
+        createdAt: 'DESC',
+      },
+      take: 40,
+    });
 
+    return wishes;
+  }
+
+  async findTop() {
+    const wishes = await this.wishRepository.find({
+      order: {
+        copied: 'DESC',
+      },
+      take: 20,
+    });
+
+    return wishes;
+  }
+
+  async findOne(id: number): Promise<Wish> {
     const wish = await this.wishRepository.findOne({
       where: {
         id,
@@ -51,8 +68,15 @@ export class WishesService {
   //     },
   //   });
   // }
-  async updateOne(id: number, userId: number, updateWishDto: UpdateWishDto) {
+  async update(id: number, userId: number, updateWishDto: UpdateWishDto) {
     const wish = await this.findOne(id);
+
+    if (wish.offers.length > 0) {
+      throw new ForbiddenException(
+        'Нельзя изменять стоимость, если уже есть желающие скинуться',
+      );
+    }
+
     if (userId === wish.owner.id) {
       return await this.wishRepository.update(id, updateWishDto);
     } else {
@@ -69,5 +93,18 @@ export class WishesService {
       throw new ForbiddenException('Невозможно удалить чужие желания');
     }
     // return { message: 'Wish has been deleted' };
+  }
+
+  async copyWish(id: number, user: User) {
+    const wish = await this.findOne(id);
+
+    await this.wishRepository.update(id, {
+      copied: (wish.copied = +1),
+    });
+
+    return this.wishRepository.save({
+      ...wish,
+      owner: user,
+    });
   }
 }
