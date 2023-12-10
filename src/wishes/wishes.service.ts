@@ -85,14 +85,13 @@ export class WishesService {
   }
 
   async removeOne(id: number, userId: number) {
-    // await this.wishRepository.delete(id);
     const wish = await this.findOne(id);
+
     if (userId === wish.owner.id) {
       return await this.wishRepository.delete(id);
     } else {
       throw new ForbiddenException('Невозможно удалить чужие желания');
     }
-    // return { message: 'Wish has been deleted' };
   }
 
   async copyWish(id: number, user: User) {

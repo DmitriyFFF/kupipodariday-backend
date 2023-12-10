@@ -44,7 +44,7 @@ export class WishesController {
   async findOne(@Param('id') id: number): Promise<Wish> {
     const wish = await this.wishesService.findOne(id);
     if (!wish) {
-      throw new NotFoundException('Wish does not exist!');
+      throw new NotFoundException('Желание отсутствует!');
     } else {
       return wish;
     }
@@ -67,17 +67,17 @@ export class WishesController {
   ) {
     const wish = await this.wishesService.findOne(id);
     if (!wish) {
-      throw new NotFoundException('Wish does not exist!');
+      throw new NotFoundException('Желание отсутствует!');
     }
     return this.wishesService.update(id, req.user.id, updateWishDto);
   }
 
   @UseGuards(JwtGuard)
   @Delete(':id')
-  async remove(@Req() req, @Param('id') id: number): Promise<any> {
+  async remove(@Req() req, @Param('id') id: number) {
     const wish = await this.wishesService.findOne(id);
     if (!wish) {
-      throw new NotFoundException('Wish does not exist!');
+      throw new NotFoundException('Желание отсутствует!');
     }
     return this.wishesService.removeOne(id, req.user.id);
   }

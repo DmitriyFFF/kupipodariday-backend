@@ -28,13 +28,13 @@ export class UsersService {
   // }
 
   async findOne(id: number): Promise<User> {
-    return this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: {
         id,
       },
     });
 
-    // return user;
+    return user;
   }
 
   async findByUsername(username: string): Promise<User> {

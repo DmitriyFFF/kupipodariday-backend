@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Wishlist } from './entities/wishlist.entity';
 import { Repository } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class WishlistsService {
@@ -12,42 +13,64 @@ export class WishlistsService {
     private readonly wishListRepository: Repository<Wishlist>,
   ) {}
 
-  async create(createWishlistDto: CreateWishlistDto): Promise<Wishlist> {
-    const wishList = this.wishListRepository.create(createWishlistDto);
+  async findAll(): Promise<Wishlist[]> {
+    return this.wishListRepository.find();
+  }
+
+  async create(
+    owner: User,
+    createWishlistDto: CreateWishlistDto,
+  ): Promise<Wishlist> {
+    const wishList = this.wishListRepository.create({
+      ...createWishlistDto,
+      owner,
+    });
 
     return this.wishListRepository.save(wishList);
   }
 
-  // async findAll(): Promise<Wishlist[]> {
-  //   return this.wishListRepository.find();
-  // }
-
   async findOne(id: number): Promise<Wishlist> {
-    return this.wishListRepository.findOne({
+    const wishlist = await this.wishListRepository.findOne({
       where: {
         id,
       },
+      relations: {
+        owner: true,
+      },
     });
 
-    // return wishlist;
+    return wishlist;
   }
 
-  async updateOne(
+  async update(
     id: number,
+    userId: number,
     updateWishlistDto: UpdateWishlistDto,
-  ): Promise<Wishlist> {
-    await this.wishListRepository.update({ id }, updateWishlistDto);
+  ) {
+    const wishList = await this.findOne(id);
 
-    return this.wishListRepository.findOne({
-      where: {
-        id,
-      },
-    });
+    if (userId === wishList.owner.id) {
+      return await this.wishListRepository.update(id, updateWishlistDto);
+    } else {
+      throw new ForbiddenException(
+        'Невозможно редактировать чужие списки желаний',
+      );
+    }
+
+    // return this.wishListRepository.findOne({
+    //   where: {
+    //     id,
+    //   },
+    // });
   }
 
-  async removeOne(id: number): Promise<void> {
-    await this.wishListRepository.delete(id);
+  async removeOne(id: number, userId: number) {
+    const wishList = await this.findOne(id);
 
-    // return { message: 'WishList has been deleted' };
+    if (userId === wishList.owner.id) {
+      return this.wishListRepository.delete(id);
+    } else {
+      throw new ForbiddenException('Невозможно удалить чужие списки желаний');
+    }
   }
 }
