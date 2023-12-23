@@ -15,6 +15,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { Wish } from 'src/wishes/entities/wish.entity';
 // import { Wish } from 'src/wishes/entities/wish.entity';
 
 @UseGuards(JwtGuard)
@@ -50,6 +51,11 @@ export class UsersController {
     return this.usersService.updateOne(req.user.id, updateUserDto);
   }
 
+  @Get('me/wishes')
+  async getOwnWishes(@Req() req): Promise<Wish[]> {
+    return await this.usersService.getWishesById(req.user.id);
+  }
+
   @Get(':username')
   async getUser(@Param('username') username: string): Promise<User> {
     const user = await this.usersService.findByUsername(username);
@@ -60,14 +66,14 @@ export class UsersController {
     }
   }
 
-  // @Get(':username/wishes')
-  // async getWishes(@Param('username') username: string): Promise<Wish[]> {
-  //   const user = await this.usersService.findByUsername(username);
-  //   if (!user) {
-  //     throw new NotFoundException('User does not exist!');
-  //   }
-  //   return this.usersService.getWishesById(user.id);
-  // }
+  @Get(':username/wishes')
+  async getWishes(@Param('username') username: string): Promise<Wish[]> {
+    const user = await this.usersService.findByUsername(username);
+    if (!user) {
+      throw new NotFoundException('User does not exist!');
+    }
+    return this.usersService.getWishesByUsername(user.username);
+  }
 
   @Post('find')
   async findMany(@Body() user): Promise<User[]> {

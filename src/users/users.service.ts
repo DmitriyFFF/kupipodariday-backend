@@ -20,7 +20,7 @@ export class UsersService {
     const saltOrRounds = 10; //вынести в константы
     const hash = await bcrypt.hash(password, saltOrRounds);
 
-    return this.userRepository.save({ ...result, password: hash });
+    return await this.userRepository.save({ ...result, password: hash });
   }
 
   // async findAll(): Promise<User[]> {
@@ -93,15 +93,15 @@ export class UsersService {
     return wishes;
   }
 
-  // async getWishesByUsername(username: string): Promise<Wish[]> {
-  //   const { wishes } = await this.userRepository.findOne({
-  //     where: {
-  //       username,
-  //     },
-  //     relations: {
-  //       wishes: true,
-  //     },
-  //   });
-  //   return wishes;
-  // }
+  async getWishesByUsername(username: string): Promise<Wish[]> {
+    const { wishes } = await this.userRepository.findOne({
+      where: {
+        username,
+      },
+      relations: {
+        wishes: true,
+      },
+    });
+    return wishes;
+  }
 }
