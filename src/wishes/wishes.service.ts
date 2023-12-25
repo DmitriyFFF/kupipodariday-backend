@@ -80,7 +80,7 @@ export class WishesService {
     if (userId === wish.owner.id) {
       return await this.wishRepository.update(id, updateWishDto);
     } else {
-      throw new ForbiddenException('Невозможно редактировать чужие желания');
+      throw new ForbiddenException('Невозможно редактировать чужие подарки');
     }
   }
 
@@ -90,7 +90,7 @@ export class WishesService {
     if (userId === wish.owner.id) {
       return await this.wishRepository.delete(id);
     } else {
-      throw new ForbiddenException('Невозможно удалить чужие желания');
+      throw new ForbiddenException('Невозможно удалить чужие подарки');
     }
   }
 

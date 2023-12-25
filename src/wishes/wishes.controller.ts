@@ -20,6 +20,15 @@ import { JwtGuard } from 'src/auth/guards/jwt.guard';
 export class WishesController {
   constructor(private readonly wishesService: WishesService) {}
 
+  @UseGuards(JwtGuard)
+  @Post()
+  async create(
+    @Req() req,
+    @Body() createWishDto: CreateWishDto,
+  ): Promise<Wish> {
+    return this.wishesService.create(req.user, createWishDto);
+  }
+
   @Get('last')
   async findLast() {
     return await this.wishesService.findLast();
@@ -31,20 +40,11 @@ export class WishesController {
   }
 
   @UseGuards(JwtGuard)
-  @Post()
-  async create(
-    @Req() req,
-    @Body() createWishDto: CreateWishDto,
-  ): Promise<Wish> {
-    return this.wishesService.create(req.user, createWishDto);
-  }
-
-  @UseGuards(JwtGuard)
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Wish> {
     const wish = await this.wishesService.findOne(id);
     if (!wish) {
-      throw new NotFoundException('Желание отсутствует!');
+      throw new NotFoundException('Подарок отсутствует!');
     } else {
       return wish;
     }
@@ -67,17 +67,17 @@ export class WishesController {
   ) {
     const wish = await this.wishesService.findOne(id);
     if (!wish) {
-      throw new NotFoundException('Желание отсутствует!');
+      throw new NotFoundException('Подарок отсутствует!');
     }
     return this.wishesService.update(id, req.user.id, updateWishDto);
   }
 
   @UseGuards(JwtGuard)
   @Delete(':id')
-  async remove(@Req() req, @Param('id') id: number) {
+  async removeOne(@Req() req, @Param('id') id: number) {
     const wish = await this.wishesService.findOne(id);
     if (!wish) {
-      throw new NotFoundException('Желание отсутствует!');
+      throw new NotFoundException('Подарок отсутствует!');
     }
     return this.wishesService.removeOne(id, req.user.id);
   }

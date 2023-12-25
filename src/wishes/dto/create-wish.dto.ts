@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsNumber, IsUrl, Length } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsUrl, Length } from 'class-validator';
 
 export class CreateWishDto {
   @IsNotEmpty()
@@ -15,11 +15,11 @@ export class CreateWishDto {
   @IsNumber({ maxDecimalPlaces: 2 })
   price: number;
 
-  @IsNumber({ maxDecimalPlaces: 2 })
-  raised: number;
+  // @IsNumber({ maxDecimalPlaces: 2 })
+  // raised: number;
 
-  @IsInt()
-  copied: number;
+  // @IsInt()
+  // copied: number;
 
   @Length(1, 1024)
   description: string;

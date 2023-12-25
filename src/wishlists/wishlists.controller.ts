@@ -38,7 +38,7 @@ export class WishlistsController {
   async findOne(@Param('id') id: number): Promise<Wishlist> {
     const wishList = await this.wishlistsService.findOne(id);
     if (!wishList) {
-      throw new NotFoundException('Список желаний отсутствует!');
+      throw new NotFoundException('Список подарков пуст!');
     } else {
       return wishList;
     }
@@ -52,16 +52,16 @@ export class WishlistsController {
   ) {
     const wishList = await this.wishlistsService.findOne(id);
     if (!wishList) {
-      throw new NotFoundException('Список желаний отсутствует!');
+      throw new NotFoundException('Список подарков пуст!');
     }
     return this.wishlistsService.update(id, req.user.id, updateWishlistDto);
   }
 
   @Delete(':id')
-  async remove(@Req() req, @Param('id') id: number) {
+  async removeOne(@Req() req, @Param('id') id: number) {
     const wishList = await this.wishlistsService.findOne(id);
     if (!wishList) {
-      throw new NotFoundException('Список желаний отсутствует!');
+      throw new NotFoundException('Список подарков пуст!');
     }
     return this.wishlistsService.removeOne(id, req.user.id);
   }

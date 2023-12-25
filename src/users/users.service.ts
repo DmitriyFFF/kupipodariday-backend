@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Wish } from 'src/wishes/entities/wish.entity';
+import { saltOrRounds } from '../utils/constants';
 
 @Injectable()
 export class UsersService {
@@ -17,7 +18,6 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = this.userRepository.create(createUserDto);
     const { password, ...result } = user;
-    const saltOrRounds = 10; //вынести в константы
     const hash = await bcrypt.hash(password, saltOrRounds);
 
     return await this.userRepository.save({ ...result, password: hash });
@@ -62,7 +62,6 @@ export class UsersService {
   }
 
   async updateOne(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const saltOrRounds = 10; //вынести в константы
     if (updateUserDto.password) {
       const hash = await bcrypt.hash(updateUserDto.password, saltOrRounds);
       updateUserDto.password = hash;
@@ -77,8 +76,6 @@ export class UsersService {
 
   async removeOne(id: number): Promise<void> {
     await this.userRepository.delete(id);
-
-    // return { message: 'User has been deleted' };
   }
 
   async getWishesById(id: number): Promise<Wish[]> {

@@ -10,6 +10,7 @@ import {
 //import { Length, IsUrl, IsNumber, IsInt } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 import { Offer } from 'src/offers/entities/offer.entity';
+import { IsInt, IsNumber, IsUrl, Length } from 'class-validator';
 
 @Entity()
 export class Wish {
@@ -23,31 +24,31 @@ export class Wish {
   updatedAt: Date;
 
   @Column()
-  //@Length(1, 250)
+  @Length(1, 250)
   name: string;
 
   @Column()
-  //@IsUrl()
+  @IsUrl()
   link: string;
 
   @Column()
-  //@IsUrl()
+  @IsUrl()
   image: string;
 
   @Column()
-  //@IsNumber({ maxDecimalPlaces: 2 })
+  @IsNumber({ maxDecimalPlaces: 2 })
   price: number;
 
-  @Column()
-  //@IsNumber({ maxDecimalPlaces: 2 })
+  @Column({ default: 0 })
+  @IsNumber({ maxDecimalPlaces: 2 })
   raised: number;
 
-  @Column()
-  //@IsInt()
+  @Column({ default: 0 })
+  @IsInt()
   copied: number;
 
   @Column()
-  //@Length(1, 1024)
+  @Length(1, 1024)
   description: string;
 
   @ManyToOne(() => User, (user) => user.wishes)

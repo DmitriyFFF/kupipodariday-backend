@@ -5,13 +5,13 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
+  // Delete,
   NotFoundException,
   UseGuards,
   Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+// import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
@@ -23,10 +23,10 @@ import { Wish } from 'src/wishes/entities/wish.entity';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.usersService.create(createUserDto);
-  }
+  // @Post()
+  // async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+  //   return this.usersService.create(createUserDto);
+  // }
 
   // @Get()
   // findAll() {
@@ -34,17 +34,17 @@ export class UsersController {
   // }
 
   @Get('me')
-  async getMe(@Req() req): Promise<User> {
+  async findOwn(@Req() req): Promise<User> {
     const user = await this.usersService.findOne(req.user.id);
     if (!user) {
-      throw new NotFoundException('User does not exist!');
+      throw new NotFoundException('Пользователь не найден!');
     } else {
       return user;
     }
   }
 
   @Patch('me')
-  async updateMe(
+  async update(
     @Req() req,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<User> {
@@ -57,10 +57,10 @@ export class UsersController {
   }
 
   @Get(':username')
-  async getUser(@Param('username') username: string): Promise<User> {
+  async findOne(@Param('username') username: string): Promise<User> {
     const user = await this.usersService.findByUsername(username);
     if (!user) {
-      throw new NotFoundException('User does not exist!');
+      throw new NotFoundException('Пользователь с таким именем не найден!');
     } else {
       return user;
     }
@@ -70,7 +70,7 @@ export class UsersController {
   async getWishes(@Param('username') username: string): Promise<Wish[]> {
     const user = await this.usersService.findByUsername(username);
     if (!user) {
-      throw new NotFoundException('User does not exist!');
+      throw new NotFoundException('Пользователь с таким именем не найден!');
     }
     return this.usersService.getWishesByUsername(user.username);
   }
@@ -80,30 +80,30 @@ export class UsersController {
     return this.usersService.findMany(user);
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: number): Promise<User> {
-    const user = await this.usersService.findOne(id);
-    if (!user) {
-      throw new NotFoundException('User does not exist!');
-    } else {
-      return user;
-    }
-  }
+  // @Get(':id')
+  // async findOne(@Param('id') id: number): Promise<User> {
+  //   const user = await this.usersService.findOne(id);
+  //   if (!user) {
+  //     throw new NotFoundException('User does not exist!');
+  //   } else {
+  //     return user;
+  //   }
+  // }
 
-  @Patch(':id')
-  async update(
-    @Param('id') id: number,
-    @Body() updateUserDto: UpdateUserDto,
-  ): Promise<User> {
-    return this.usersService.updateOne(id, updateUserDto);
-  }
+  // @Patch(':id')
+  // async update(
+  //   @Param('id') id: number,
+  //   @Body() updateUserDto: UpdateUserDto,
+  // ): Promise<User> {
+  //   return this.usersService.updateOne(id, updateUserDto);
+  // }
 
-  @Delete(':id')
-  async remove(@Param('id') id: number): Promise<any> {
-    const user = await this.usersService.findOne(id);
-    if (!user) {
-      throw new NotFoundException('User does not exist!');
-    }
-    return this.usersService.removeOne(id);
-  }
+  // @Delete(':id')
+  // async remove(@Param('id') id: number): Promise<any> {
+  //   const user = await this.usersService.findOne(id);
+  //   if (!user) {
+  //     throw new NotFoundException('User does not exist!');
+  //   }
+  //   return this.usersService.removeOne(id);
+  // }
 }

@@ -53,7 +53,7 @@ export class WishlistsService {
       return await this.wishListRepository.update(id, updateWishlistDto);
     } else {
       throw new ForbiddenException(
-        'Невозможно редактировать чужие списки желаний',
+        'Невозможно редактировать чужие списки подарков',
       );
     }
 
@@ -70,7 +70,7 @@ export class WishlistsService {
     if (userId === wishList.owner.id) {
       return this.wishListRepository.delete(id);
     } else {
-      throw new ForbiddenException('Невозможно удалить чужие списки желаний');
+      throw new ForbiddenException('Невозможно удалить чужие списки подарков');
     }
   }
 }
