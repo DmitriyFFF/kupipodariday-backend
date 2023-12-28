@@ -54,11 +54,11 @@ export class UsersService {
   //   return users;
   // }
 
-  async findMany(query: string): Promise<User[]> {
-    const users = await this.userRepository.find({
+  async findMany({ query }: UpdateUserDto): Promise<User[]> {
+    const user = await this.userRepository.find({
       where: [{ username: query }, { email: query }],
     });
-    return users;
+    return user;
   }
 
   async updateOne(id: number, updateUserDto: UpdateUserDto): Promise<User> {

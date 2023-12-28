@@ -6,6 +6,7 @@ import {
   IsUrl,
   Length,
   IsOptional,
+  MinLength,
 } from 'class-validator';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
@@ -30,4 +31,8 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   //@IsNotEmpty()
   @IsOptional()
   password: string;
+
+  @IsOptional()
+  @MinLength(2)
+  query?: string;
 }

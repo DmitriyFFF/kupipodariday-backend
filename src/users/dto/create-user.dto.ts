@@ -1,20 +1,37 @@
-import { IsEmail, IsNotEmpty, IsUrl, Length } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUrl,
+  Length,
+} from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateUserDto {
   @IsNotEmpty()
+  @IsString()
   @Length(2, 30)
   username: string;
 
+  // @Length(2, 200)
+  // about: string;
+
+  @Transform((params) => (params.value?.length > 0 ? params.value : undefined))
+  @IsOptional()
   @Length(2, 200)
-  about: string;
+  about?: string;
 
   @IsUrl()
-  avatar: string;
+  @IsOptional()
+  avatar?: string;
 
   @IsNotEmpty()
+  @IsString()
   @IsEmail()
   email: string;
 
   @IsNotEmpty()
+  @IsString()
   password: string;
 }

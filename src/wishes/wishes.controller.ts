@@ -26,7 +26,7 @@ export class WishesController {
     @Req() req,
     @Body() createWishDto: CreateWishDto,
   ): Promise<Wish> {
-    return this.wishesService.create(req.user, createWishDto);
+    return await this.wishesService.create(req.user, createWishDto);
   }
 
   @Get('last')
