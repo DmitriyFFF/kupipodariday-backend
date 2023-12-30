@@ -7,7 +7,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-//import { Length, IsUrl, IsNumber, IsInt } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 import { Offer } from 'src/offers/entities/offer.entity';
 import { IsInt, IsNumber, IsUrl, Length } from 'class-validator';

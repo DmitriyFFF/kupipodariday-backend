@@ -26,7 +26,7 @@ export class WishlistsService {
       owner,
     });
 
-    return this.wishListRepository.save(wishList);
+    return await this.wishListRepository.save(wishList);
   }
 
   async findOne(id: number): Promise<Wishlist> {
@@ -56,12 +56,6 @@ export class WishlistsService {
         'Невозможно редактировать чужие списки подарков',
       );
     }
-
-    // return this.wishListRepository.findOne({
-    //   where: {
-    //     id,
-    //   },
-    // });
   }
 
   async removeOne(id: number, userId: number) {

@@ -20,7 +20,6 @@ export class CreateWishlistDto {
   @IsUrl()
   image: string;
 
-  // @IsNotEmpty()
   @IsArray()
   itemsId: number[];
 }

@@ -28,18 +28,3 @@ import { jwtConstants } from 'src/utils/constants';
   exports: [AuthService],
 })
 export class AuthModule {}
-
-// @Module({
-//   imports: [
-//     UsersModule,
-//     PassportModule,
-//     JwtModule.register({
-//       secret: jwtConstants.secret,
-//       signOptions: { expiresIn: '1d' },
-//     }),
-//   ],
-//   controllers: [AuthController],
-//   providers: [AuthService, LocalStrategy, JwtStrategy],
-//   exports: [AuthService],
-// })
-// export class AuthModule {}

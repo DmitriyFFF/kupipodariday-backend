@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-//import { IsNumber } from 'class-validator';
+import { IsBoolean, IsNumber } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 import { Wish } from 'src/wishes/entities/wish.entity';
 
@@ -25,10 +25,11 @@ export class Offer {
   item: Wish;
 
   @Column()
-  //@IsNumber({ maxDecimalPlaces: 2 })
+  @IsNumber({ maxDecimalPlaces: 2 })
   amount: number;
 
   @Column({ default: false })
+  @IsBoolean()
   hidden: boolean;
 
   @ManyToOne(() => User, (user) => user.offers)

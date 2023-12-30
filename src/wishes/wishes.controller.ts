@@ -50,14 +50,6 @@ export class WishesController {
     }
   }
 
-  // @Patch(':id')
-  // async update(
-  //   @Param('id') id: number,
-  //   @Body() updateWishDto: UpdateWishDto,
-  // ): Promise<Wish> {
-  //   return this.wishesService.updateOne(id, updateWishDto);
-  // }
-
   @UseGuards(JwtGuard)
   @Patch(':id')
   async update(

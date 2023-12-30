@@ -20,10 +20,6 @@ export class WishesService {
     return this.wishRepository.save(wish);
   }
 
-  // async findAll(): Promise<Wish[]> {
-  //   return this.wishRepository.find();
-  // }
-
   async findLast() {
     const wishes = await this.wishRepository.find({
       order: {
@@ -58,20 +54,10 @@ export class WishesService {
 
     return wish;
   }
-
-  // async updateOne(id: number, updateWishDto: UpdateWishDto): Promise<Wish> {
-  //   await this.wishRepository.update({ id }, updateWishDto);
-
-  //   return this.wishRepository.findOne({
-  //     where: {
-  //       id,
-  //     },
-  //   });
-  // }
   async update(id: number, userId: number, updateWishDto: UpdateWishDto) {
     const wish = await this.findOne(id);
 
-    if (wish.offers.length > 0) {
+    if (wish.raised) {
       throw new ForbiddenException(
         'Нельзя изменять стоимость, если уже есть желающие скинуться',
       );
@@ -98,7 +84,7 @@ export class WishesService {
     const wish = await this.findOne(id);
 
     await this.wishRepository.update(id, {
-      copied: (wish.copied = +1),
+      copied: (wish.copied += 1),
     });
 
     return this.wishRepository.save({

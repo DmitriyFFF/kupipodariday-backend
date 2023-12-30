@@ -23,10 +23,6 @@ export class UsersService {
     return await this.userRepository.save({ ...result, password: hash });
   }
 
-  // async findAll(): Promise<User[]> {
-  //   return this.userRepository.find();
-  // }
-
   async findOne(id: number): Promise<User> {
     const user = await this.userRepository.findOne({
       where: {
@@ -46,13 +42,6 @@ export class UsersService {
 
     return user;
   }
-
-  // async findMany(user: { query: any }): Promise<User[]> {
-  //   const users = this.userRepository.find({
-  //     where: [{ username: user.query }, { email: user.query }],
-  //   });
-  //   return users;
-  // }
 
   async findMany({ query }: UpdateUserDto): Promise<User[]> {
     const user = await this.userRepository.find({

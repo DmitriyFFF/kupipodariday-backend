@@ -15,12 +15,6 @@ export class CreateWishDto {
   @IsNumber({ maxDecimalPlaces: 2 })
   price: number;
 
-  // @IsNumber({ maxDecimalPlaces: 2 })
-  // raised: number;
-
-  // @IsInt()
-  // copied: number;
-
   @Length(1, 1024)
   description: string;
 }

@@ -14,9 +14,6 @@ export class CreateUserDto {
   @Length(2, 30)
   username: string;
 
-  // @Length(2, 200)
-  // about: string;
-
   @Transform((params) => (params.value?.length > 0 ? params.value : undefined))
   @IsOptional()
   @Length(2, 200)

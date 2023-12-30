@@ -1,11 +1,11 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateOfferDto } from './dto/create-offer.dto';
-// import { UpdateOfferDto } from './dto/update-offer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Offer } from './entities/offer.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { WishesService } from 'src/wishes/wishes.service';
+import { UpdateWishDto } from 'src/wishes/dto/update-wish.dto';
 
 @Injectable()
 export class OffersService {
@@ -16,7 +16,6 @@ export class OffersService {
   ) {}
 
   async create(user: User, createOfferDto: CreateOfferDto): Promise<Offer> {
-    const offer = this.offerRepository.create({ ...createOfferDto, user });
     const wish = await this.wishService.findOne(createOfferDto.itemId);
 
     if (user.id === wish.owner.id) {
@@ -31,11 +30,19 @@ export class OffersService {
       );
     }
 
-    return this.offerRepository.save(offer);
+    await this.wishService.update(wish.id, wish.owner.id, {
+      raised: createOfferDto.amount,
+    } as UpdateWishDto);
+
+    return this.offerRepository.save({ ...createOfferDto, user, item: wish });
   }
 
   async findAll(): Promise<Offer[]> {
-    return this.offerRepository.find();
+    return this.offerRepository.find({
+      relations: {
+        user: true,
+      },
+    });
   }
 
   async findOne(id: number): Promise<Offer> {
@@ -47,18 +54,4 @@ export class OffersService {
 
     return offer;
   }
-
-  // async updateOne(id: number, updateOfferDto: UpdateOfferDto): Promise<Offer> {
-  //   await this.offerRepository.update({ id }, updateOfferDto);
-
-  //   return this.offerRepository.findOne({
-  //     where: {
-  //       id,
-  //     },
-  //   });
-  // }
-
-  // async removeOne(id: number): Promise<void> {
-  //   await this.offerRepository.delete(id);
-  // }
 }
