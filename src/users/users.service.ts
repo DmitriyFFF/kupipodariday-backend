@@ -4,9 +4,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 import { Wish } from 'src/wishes/entities/wish.entity';
-import { saltOrRounds } from '../utils/constants';
+import { hashHelper } from 'src/helpers/hash-helper';
 
 @Injectable()
 export class UsersService {
@@ -18,7 +17,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = this.userRepository.create(createUserDto);
     const { password, ...result } = user;
-    const hash = await bcrypt.hash(password, saltOrRounds);
+    const hash = await hashHelper.hashPassword(password);
 
     return await this.userRepository.save({ ...result, password: hash });
   }
@@ -52,7 +51,7 @@ export class UsersService {
 
   async updateOne(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     if (updateUserDto.password) {
-      const hash = await bcrypt.hash(updateUserDto.password, saltOrRounds);
+      const hash = await hashHelper.hashPassword(updateUserDto.password);
       updateUserDto.password = hash;
     }
     await this.userRepository.update({ id }, updateUserDto);
